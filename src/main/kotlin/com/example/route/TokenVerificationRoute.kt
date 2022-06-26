@@ -32,6 +32,7 @@ fun Route.tokenVerificationRoute(app: Application,userDataSource: UserDataSource
             app.log.info("request is $result")
 
 
+
             if (result != null) {
 
                 saveUserToDatabase(
@@ -56,7 +57,7 @@ fun Route.tokenVerificationRoute(app: Application,userDataSource: UserDataSource
 
 }
 
-private suspend fun PipelineContext<Unit,ApplicationCall>.saveUserToDatabase(
+ suspend fun PipelineContext<Unit,ApplicationCall>.saveUserToDatabase(
     app: Application,
     result:GoogleIdToken,
     userDataSource: UserDataSource
