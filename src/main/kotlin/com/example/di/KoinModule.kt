@@ -8,8 +8,13 @@ import org.litote.kmongo.coroutine.coroutine
 import org.litote.kmongo.reactivestreams.KMongo
 
 val koinModule = module {
+
+    val mongoPW = System.getenv("MONGO_PW")
+
     single{
-        KMongo.createClient()
+        KMongo.createClient(
+            connectionString = "mongodb+srv://Godwill:$mongoPW@cluster0.fyx16uq.mongodb.net/trivious_database?retryWrites=true&w=majority"
+        )
             .coroutine
             .getDatabase(DATABASE_NAME)
     }
@@ -17,4 +22,6 @@ val koinModule = module {
     single<UserDataSource> {
         UserDataSourceImpl(get())
     }
+
+
 }

@@ -46,6 +46,8 @@ dependencies {
     implementation("io.insert-koin:koin-ktor:$koinVersion")
     implementation("io.insert-koin:koin-logger-slf4j:$koinVersion")
 
+    implementation("commons-codec:commons-codec:1.15")
+
 
 
     // Google Client API Library
