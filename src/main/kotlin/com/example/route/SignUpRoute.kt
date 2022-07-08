@@ -3,6 +3,7 @@ package com.example.route
 import com.example.domain.model.EndPoints
 import com.example.domain.model.UserSession
 import com.example.domain.model.requests.ApiUserRequest
+import com.example.domain.model.response.ApiResponse
 import com.example.domain.model.user.User
 import com.example.domain.model.user.account_info.Account
 import com.example.domain.repository.UserDataSource
@@ -45,6 +46,7 @@ fun Route.signUpRoute(
 
 
         val user = User(
+            phoneNumber = request.phoneNumber,
             username = request.username,
             password = saltedHash.hash,
             email = request.email,
@@ -53,7 +55,6 @@ fun Route.signUpRoute(
 
         )
 
-
         val wasAcknowledged = userDataSource.saveUserInfo(user)
 
         if (!wasAcknowledged) {
@@ -61,15 +62,11 @@ fun Route.signUpRoute(
         }
 
 
-
-
         call.sessions.set(UserSession(id = user.id, username =user.username, email = user.email))
-        call.respondRedirect(EndPoints.Authorized.path)
-
-
-
-
-
+        call.respond(
+            message = ApiResponse(success = true),
+            status = HttpStatusCode.OK
+        )
 
 
 

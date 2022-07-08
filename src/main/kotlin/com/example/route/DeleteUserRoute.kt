@@ -42,7 +42,7 @@ fun Route.deleteUserRoute(
 
 private suspend fun PipelineContext<Unit, ApplicationCall>.deleteUserFromDb(
     app: Application,
-    userId: String ,
+    userId: String   ,
     userDataSource: UserDataSource
 ) {
     val result = userDataSource.deleteUser(userId = userId)

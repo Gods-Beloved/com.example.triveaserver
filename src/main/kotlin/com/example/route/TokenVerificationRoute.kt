@@ -10,7 +10,9 @@ import com.example.util.Constants.ISSUER
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier
 import com.google.api.client.http.javanet.NetHttpTransport
+import com.google.api.client.json.JsonFactory
 import com.google.api.client.json.gson.GsonFactory
+
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
@@ -28,15 +30,17 @@ fun Route.tokenVerificationRoute(
     post(EndPoints.TokenVerification.path) {
         val request = call.receive<ApiTokenRequest>()
         val userSession = call.principal<UserSession>()
-        val principal = call.principal<JWTPrincipal>()
-        val userId = principal?.getClaim("userId", String::class)
+      //  val principal = call.principal<JWTPrincipal>()
+      //  val userId = principal?.getClaim("userId", String::class)
 
         if (request.tokenId.isNotEmpty()) {
-            val result = verifyGoogleTokenId(tokenId = request.tokenId)
-            if (result != null) {
+
+           val tokenSuccess = verifyGoogleTokenId(tokenId = request.tokenId,app)
+
+            if (tokenSuccess != null) {
 
                 if (userSession != null){
-                    if(result.payload.email == userSession.email){
+                    if(tokenSuccess.payload.email == userSession.email){
                         call.respondRedirect(EndPoints.Authorized.path)
 
                     }else{
@@ -45,7 +49,7 @@ fun Route.tokenVerificationRoute(
                 }else{
                     saveUserToDatabase(
                         app = app,
-                        result = result,
+                        result = tokenSuccess,
                         userDataSource = userDataSource
                     )
                 }
@@ -91,14 +95,22 @@ private suspend fun PipelineContext<Unit, ApplicationCall>.saveUserToDatabase(
     }
 }
 
-fun verifyGoogleTokenId(tokenId: String): GoogleIdToken? {
-    return try {
-        val verifier = GoogleIdTokenVerifier.Builder(NetHttpTransport(), GsonFactory())
-            .setAudience(listOf(AUDIENCE))
-            .setIssuer(ISSUER)
-            .build()
-        verifier.verify(tokenId)
-    } catch (e: Exception) {
+fun verifyGoogleTokenId(tokenId: String,app:Application): GoogleIdToken? {
+
+val gson = GsonFactory()
+
+    return try{
+    val verifier = GoogleIdTokenVerifier.Builder(NetHttpTransport(),gson)
+        .setAudience(listOf(AUDIENCE))
+        .setIssuer(ISSUER)
+        .build()
+
+    verifier.verify(tokenId)
+    }catch (e:Exception){
+        app.log.info("exception $e")
         null
     }
+
+
+
 }
