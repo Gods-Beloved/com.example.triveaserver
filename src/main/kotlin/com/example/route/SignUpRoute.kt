@@ -63,10 +63,7 @@ fun Route.signUpRoute(
 
 
         call.sessions.set(UserSession(id = user.id, username =user.username, email = user.email))
-        call.respond(
-            message = ApiResponse(success = true),
-            status = HttpStatusCode.OK
-        )
+        call.respondRedirect(EndPoints.Authorized.path)
 
 
 

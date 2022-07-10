@@ -7,6 +7,5 @@ import kotlinx.serialization.Contextual
 data class ApiResponse(
     val success:Boolean,
     val user: User? = null,
-    val message:String? = null,
-    val token:String? = null
+    val message:String? = null
 )

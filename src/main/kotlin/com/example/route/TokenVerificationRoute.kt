@@ -84,6 +84,8 @@ private suspend fun PipelineContext<Unit, ApplicationCall>.saveUserToDatabase(
         account = Account()
     )
 
+    call.sessions.clear<UserSession>()
+
     val response = userDataSource.saveUserInfo(user = user)
     if (response) {
         app.log.info("USER SUCCESSFULLY SAVED/RETRIEVED")
@@ -97,10 +99,10 @@ private suspend fun PipelineContext<Unit, ApplicationCall>.saveUserToDatabase(
 
 fun verifyGoogleTokenId(tokenId: String,app:Application): GoogleIdToken? {
 
-val gson = GsonFactory()
+
 
     return try{
-    val verifier = GoogleIdTokenVerifier.Builder(NetHttpTransport(),gson)
+    val verifier = GoogleIdTokenVerifier.Builder(NetHttpTransport(),GsonFactory())
         .setAudience(listOf(AUDIENCE))
         .setIssuer(ISSUER)
         .build()

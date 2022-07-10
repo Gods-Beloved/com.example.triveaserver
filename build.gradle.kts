@@ -51,7 +51,7 @@ dependencies {
 
 
     // Google Client API Library
-    implementation("com.google.api-client:google-api-client:1.35.1")
+    implementation("com.google.api-client:google-api-client:1.33.2")
 
 
 }

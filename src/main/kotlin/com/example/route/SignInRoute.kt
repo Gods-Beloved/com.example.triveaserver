@@ -64,13 +64,7 @@ app:Application
             )
         )
 
-        call.respond(
-            status = HttpStatusCode.OK,
-            message = ApiResponse(
-               success = true,
-                token = token
-            )
-        )
+       call.respondRedirect(EndPoints.Authorized.path)
 
 
 
