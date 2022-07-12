@@ -20,14 +20,24 @@ class UserDataSourceImpl(
     }
 
 
-    override suspend fun saveUserInfo(user: User): Boolean {
+    override suspend fun saveUserInfo(email:String): Boolean {
         val existingUser = users.findOne(filter = User::email eq user.email)
         return if (existingUser == null) {
             users.insertOne(document = user).wasAcknowledged()
         } else {
-            false
+            true
         }
     }
+
+    override suspend fun saveUserSignUpInfo(user: User): Boolean {
+        val existingUser = users.findOne(filter = User::email eq user.email)
+        return if (existingUser == null) {
+            users.insertOne(document = user).wasAcknowledged()
+        } else {
+           false
+        }
+    }
+
 
     override suspend fun deleteUser(userId: String): Boolean {
         return users.deleteOne(filter = User::id eq userId).wasAcknowledged()

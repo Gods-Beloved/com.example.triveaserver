@@ -22,7 +22,8 @@ fun Route.getUserInfoRoute(
                 call.respondRedirect(EndPoints.Unauthorized.path)
             } else {
                 try {
-                    app.log.info("VALID SESSION")
+                    app.log.info("VALID SESSION ${userSession.id}")
+
                     call.respond(
                         message = ApiResponse(
                             success = true,

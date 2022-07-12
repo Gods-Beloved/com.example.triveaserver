@@ -12,9 +12,7 @@ class SHA256HashingServiceImpl:HashingService {
         val saltAsHex = Hex.encodeHexString(salt)
         val hash = DigestUtils.sha256Hex("$saltAsHex$value")
 
-        application.log.info("salt is $salt")
-        application.log.info("saltAsHex is$saltAsHex")
-        application.log.info("hash$hash")
+
 
         return SaltedHash(
             hash = hash,

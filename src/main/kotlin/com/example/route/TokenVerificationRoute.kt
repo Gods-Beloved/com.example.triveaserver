@@ -10,7 +10,6 @@ import com.example.util.Constants.ISSUER
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier
 import com.google.api.client.http.javanet.NetHttpTransport
-import com.google.api.client.json.JsonFactory
 import com.google.api.client.json.gson.GsonFactory
 
 import io.ktor.http.*
@@ -35,30 +34,21 @@ fun Route.tokenVerificationRoute(
 
         if (request.tokenId.isNotEmpty()) {
 
-           val tokenSuccess = verifyGoogleTokenId(tokenId = request.tokenId,app)
+           val result = verifyGoogleTokenId(tokenId = request.tokenId,app)
 
-            if (tokenSuccess != null) {
+            if (result != null) {
 
-                if (userSession != null){
-                    if(tokenSuccess.payload.email == userSession.email){
-                        call.respondRedirect(EndPoints.Authorized.path)
+                saveUserToDatabase(
+                    app = app,
+                    result = result,
+                    userDataSource = userDataSource
+                )
 
                     }else{
-                       call.respond(HttpStatusCode.BadRequest,"Google ID Token Error")
-                    }
-                }else{
-                    saveUserToDatabase(
-                        app = app,
-                        result = tokenSuccess,
-                        userDataSource = userDataSource
-                    )
-                }
-
-
-            } else {
                 app.log.info("TOKEN VERIFICATION FAILED")
                 call.respondRedirect(EndPoints.Unauthorized.path)
             }
+
         } else {
             app.log.info("EMPTY TOKEN ID")
             call.respondRedirect(EndPoints.Unauthorized.path)
@@ -75,6 +65,7 @@ private suspend fun PipelineContext<Unit, ApplicationCall>.saveUserToDatabase(
     val name = result.payload["name"].toString()
     val emailAddress = result.payload["email"].toString()
     val profilePhoto = result.payload["picture"].toString()
+
     val user = User(
         profilePicture= profilePhoto,
         username = name,
@@ -84,11 +75,12 @@ private suspend fun PipelineContext<Unit, ApplicationCall>.saveUserToDatabase(
         account = Account()
     )
 
-    call.sessions.clear<UserSession>()
+  //  call.sessions.clear<UserSession>()
 
     val response = userDataSource.saveUserInfo(user = user)
     if (response) {
         app.log.info("USER SUCCESSFULLY SAVED/RETRIEVED")
+
         call.sessions.set(UserSession(id = user.id, username = name, email = emailAddress))
         call.respondRedirect(EndPoints.Authorized.path)
     } else {

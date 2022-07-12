@@ -55,10 +55,11 @@ fun Route.signUpRoute(
 
         )
 
-        val wasAcknowledged = userDataSource.saveUserInfo(user)
+        val wasAcknowledged = userDataSource.saveUserSignUpInfo(user)
 
         if (!wasAcknowledged) {
             call.respond(HttpStatusCode.Conflict,"USER ALREADY EXIST")
+            return@post
         }
 
 
