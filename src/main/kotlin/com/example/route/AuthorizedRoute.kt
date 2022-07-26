@@ -10,7 +10,7 @@ import io.ktor.server.routing.*
 
 fun Routing.authorizedRoute(){
 
-    authenticate("auth-session",null){
+    authenticate("auth-session"){
 
         get(EndPoints.Authorized.path){
 

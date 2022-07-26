@@ -26,7 +26,7 @@ fun Application.module() {
 
     configureKoin()
     configureAuth()
-    configureSecurity(tokenConfig)
+    //configureSecurity(tokenConfig)
     configureRouting(hashingService = hashingService,tokenService=tokenService, tokenConfig = tokenConfig)
     configureSerialization()
     configureMonitoring()

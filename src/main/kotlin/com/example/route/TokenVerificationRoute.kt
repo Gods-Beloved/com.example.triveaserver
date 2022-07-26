@@ -63,13 +63,16 @@ private suspend fun PipelineContext<Unit, ApplicationCall>.saveUserToDatabase(
 ) {
 
     val name = result.payload["name"].toString()
+    val sub = result.payload["sub"].toString()
     val emailAddress = result.payload["email"].toString()
     val profilePhoto = result.payload["picture"].toString()
 
     val user = User(
+
         profilePicture= profilePhoto,
         username = name,
         email = emailAddress,
+        bioData = "Trivous App Player",
         password = null,
         salt = null,
         account = Account()
@@ -81,7 +84,7 @@ private suspend fun PipelineContext<Unit, ApplicationCall>.saveUserToDatabase(
     if (response) {
         app.log.info("USER SUCCESSFULLY SAVED/RETRIEVED")
 
-        call.sessions.set(UserSession(id = user.id, username = name, email = emailAddress))
+        call.sessions.set(UserSession(id = user.id, username = user.username, email = user.email))
         call.respondRedirect(EndPoints.Authorized.path)
     } else {
         app.log.info("ERROR SAVING THE USER")

@@ -14,7 +14,7 @@ fun Route.getUserInfoRoute(
     app: Application,
     userDataSource: UserDataSource
 ) {
-    authenticate("auth-session",null) {
+    authenticate("auth-session") {
         get(EndPoints.GetUserInfo.path) {
             val userSession = call.principal<UserSession>()
             if (userSession == null) {

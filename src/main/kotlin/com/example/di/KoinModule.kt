@@ -1,6 +1,8 @@
 package com.example.di
 
+import com.example.data.repository.QuestionDataSourceImpl
 import com.example.data.repository.UserDataSourceImpl
+import com.example.domain.repository.QuestionsDataSource
 import com.example.domain.repository.UserDataSource
 import com.example.util.Constants.DATABASE_NAME
 import org.koin.dsl.module
@@ -9,11 +11,12 @@ import org.litote.kmongo.reactivestreams.KMongo
 
 val koinModule = module {
 
-    val mongoPW = System.getenv("MONGO_PW")
+   // val mongoPW = System.getenv("MONGO_PW")
 
     single{
         KMongo.createClient(
-            connectionString = "mongodb+srv://Godwill:$mongoPW@cluster0.fyx16uq.mongodb.net/trivious_database?retryWrites=true&w=majority"
+
+           // connectionString = "mongodb+srv://Godwill:$mongoPW@cluster0.fyx16uq.mongodb.net/trivious_database?retryWrites=true&w=majority"
         )
             .coroutine
             .getDatabase(DATABASE_NAME)
@@ -21,6 +24,10 @@ val koinModule = module {
 
     single<UserDataSource> {
         UserDataSourceImpl(get())
+    }
+
+    single<QuestionsDataSource> {
+        QuestionDataSourceImpl(get())
     }
 
 

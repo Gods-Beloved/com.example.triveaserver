@@ -1,5 +1,6 @@
 package com.example.data.repository
 
+import com.example.domain.model.questions.Sports
 import com.example.domain.model.user.User
 import com.example.domain.repository.UserDataSource
 import io.ktor.util.*
@@ -11,6 +12,7 @@ class UserDataSourceImpl(
 ):UserDataSource {
 
     private val users = database.getCollection<User>()
+
     override suspend fun getUserInfo(userId: String): User? {
         return users.findOne(filter = User::id eq userId)
     }
@@ -20,7 +22,7 @@ class UserDataSourceImpl(
     }
 
 
-    override suspend fun saveUserInfo(email:String): Boolean {
+    override suspend fun saveUserInfo(user:User): Boolean {
         val existingUser = users.findOne(filter = User::email eq user.email)
         return if (existingUser == null) {
             users.insertOne(document = user).wasAcknowledged()
@@ -37,6 +39,7 @@ class UserDataSourceImpl(
            false
         }
     }
+
 
 
     override suspend fun deleteUser(userId: String): Boolean {

@@ -1,7 +1,12 @@
 package com.example.plugins
 
+import com.example.domain.repository.QuestionsDataSource
 import com.example.domain.repository.UserDataSource
 import com.example.route.*
+import com.example.route.questions.getEntertainmentPrice
+import com.example.route.questions.getEntertainmentQuestions
+import com.example.route.questions.getSportPrice
+import com.example.route.questions.getSportsQuestions
 import com.example.routes.deleteUserRoute
 import com.example.routes.signOutRoute
 import com.example.security.hashing.HashingService
@@ -21,6 +26,7 @@ fun Application.configureRouting(
     routing {
 
         val userDataSource:UserDataSource by inject(UserDataSource::class.java)
+        val questionsDataSource:QuestionsDataSource by inject(QuestionsDataSource::class.java)
 
 
         rootRoute()
@@ -29,6 +35,10 @@ fun Application.configureRouting(
         signOutRoute()
         authenticate()
         getSecreteInfo()
+        getSportsQuestions(questionsDataSource = questionsDataSource)
+        getEntertainmentQuestions(questionsDataSource = questionsDataSource)
+        getSportPrice(questionsDataSource = questionsDataSource)
+        getEntertainmentPrice(questionsDataSource = questionsDataSource)
         deleteUserRoute(application,userDataSource)
         getUserInfoRoute(app = application, userDataSource = userDataSource)
         tokenVerificationRoute(application,userDataSource)
