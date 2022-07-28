@@ -4,5 +4,6 @@ package com.example.domain.model.questions
 data class QuestionResponse(
     val success:Boolean,
     val sports: Sports? = null,
-    val entertainment: Entertainment? = null
+    val entertainment: Entertainment? = null,
+    val academic: Academic? = null
 )

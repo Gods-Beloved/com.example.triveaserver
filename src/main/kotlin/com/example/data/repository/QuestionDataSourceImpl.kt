@@ -2,9 +2,8 @@ package com.example.data.repository
 
 import com.example.domain.model.questions.*
 import com.example.domain.repository.QuestionsDataSource
+import org.litote.kmongo.*
 import org.litote.kmongo.coroutine.CoroutineDatabase
-import org.litote.kmongo.eq
-import org.litote.kmongo.setValue
 
 class QuestionDataSourceImpl(
     database: CoroutineDatabase
@@ -17,7 +16,7 @@ class QuestionDataSourceImpl(
     override suspend fun getSportQuestion(): Sports? {
         val availableQuestion = mutableListOf<Sports?>()
 
-        questions.findOne()?.live?.sports?.forEach {
+        questions.findOne()?.sports?.forEach {
             item ->
             if (!item.received){
                 availableQuestion.add(
@@ -30,9 +29,22 @@ class QuestionDataSourceImpl(
             }
         }
 
+        val currentQuestion =  availableQuestion.randomOrNull()
+
+        val updateSuccess =  questions.updateOne(
+            (Question::sports / Sports::question) eq currentQuestion?.question.toString(),
+            setValue(Question::sports.posOp / Sports::received, true)
+        ).wasAcknowledged()
+
+        return if (updateSuccess){
+            currentQuestion
+        } else{
+            null
+        }
 
 
-        return availableQuestion.randomOrNull()
+
+
 
        // return questions.findOne()?.live?.get(0)?.sports?.toList()
     }
@@ -40,7 +52,7 @@ class QuestionDataSourceImpl(
     override suspend fun getEntertainmentQuestion(): Entertainment? {
         val availableQuestion = mutableListOf<Entertainment?>()
 
-        questions.findOne()?.live?.entertainment?.forEach {
+        questions.findOne()?.entertainment?.forEach {
                 item ->
             if (!item.received){
                 availableQuestion.add(
@@ -55,25 +67,60 @@ class QuestionDataSourceImpl(
 
         val currentQuestion =  availableQuestion.randomOrNull()
 
-//        questions.updateOne(
-//            filter = Question::live. eq "What movie does NOT have Brad Pitt in it?",
-//            update = setValue(
-//                property = Entertainment::received,
-//                value = true
-//
-//            )
-//        )
+      val updateSuccess =  questions.updateOne(
+            (Question::entertainment / Entertainment::question) eq currentQuestion?.question.toString(),
+            setValue(Question::entertainment.posOp / Entertainment::received, true)
+        ).wasAcknowledged()
 
-        return currentQuestion
+        return if (updateSuccess){
+            currentQuestion
+        } else{
+            null
+        }
+
+
+
+    }
+
+    override suspend fun getAcademicQuestion(): Academic? {
+        val availableQuestion = mutableListOf<Academic?>()
+
+        questions.findOne()?.academic?.forEach {
+                item ->
+            if (!item.received){
+                availableQuestion.add(
+                    Academic(
+                        question = item.question,
+                        options = item.options,
+                        answer = item.answer,
+                    )
+                )
+            }
+        }
+
+        val currentQuestion =  availableQuestion.randomOrNull()
+
+        val updateSuccess =  questions.updateOne(
+            (Question::academic / Academic::question) eq currentQuestion?.question.toString(),
+            setValue(Question::academic.posOp / Academic::received, true)
+        ).wasAcknowledged()
+
+        return if (updateSuccess){
+            currentQuestion
+        } else{
+            null
+        }
+
+
     }
 
     override suspend fun getSportPrice(): FeeSizeResponse {
 
-        val fee = questions.findOne()?.live?.entry?.sportsprice
+        val fee = questions.findOne()?.entry?.sportsPrice
 
         val availableQuestion = mutableListOf<Sports?>()
 
-        questions.findOne()?.live?.sports?.forEach {
+        questions.findOne()?.sports?.forEach {
                 item ->
             if (!item.received){
                 availableQuestion.add(
@@ -100,11 +147,11 @@ class QuestionDataSourceImpl(
 
     override suspend fun getEntertainmentPrice(): FeeSizeResponse {
 
-        val fee = questions.findOne()?.live?.entry?.entertainmentprice
+        val fee = questions.findOne()?.entry?.entertainmentPrice
 
         val availableQuestion = mutableListOf<Entertainment?>()
 
-        questions.findOne()?.live?.entertainment?.forEach {
+        questions.findOne()?.entertainment?.forEach {
                 item ->
             if (!item.received){
                 availableQuestion.add(
@@ -124,6 +171,35 @@ class QuestionDataSourceImpl(
             entryfee = fee!!
         )
 
+
+
+
+    }
+
+    override suspend fun getAcademicPrice(): FeeSizeResponse? {
+        val fee = questions.findOne()?.entry?.academicPrice
+
+        val availableQuestion = mutableListOf<Academic?>()
+
+        questions.findOne()?.academic?.forEach {
+                item ->
+            if (!item.received){
+                availableQuestion.add(
+                    Academic(
+                        question = item.question,
+                        options = item.options,
+                        answer = item.answer,
+                    )
+                )
+            }
+        }
+
+        val size = availableQuestion.size
+
+        return FeeSizeResponse(
+            size = size,
+            entryfee = fee!!
+        )
 
 
 

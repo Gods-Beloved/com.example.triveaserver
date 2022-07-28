@@ -3,10 +3,7 @@ package com.example.plugins
 import com.example.domain.repository.QuestionsDataSource
 import com.example.domain.repository.UserDataSource
 import com.example.route.*
-import com.example.route.questions.getEntertainmentPrice
-import com.example.route.questions.getEntertainmentQuestions
-import com.example.route.questions.getSportPrice
-import com.example.route.questions.getSportsQuestions
+import com.example.route.questions.*
 import com.example.routes.deleteUserRoute
 import com.example.routes.signOutRoute
 import com.example.security.hashing.HashingService
@@ -30,20 +27,43 @@ fun Application.configureRouting(
 
 
         rootRoute()
+
         signInRoute(userDataSource,hashingService,tokenService,tokenConfig,application)
+
         signUpRoute(userDataSource = userDataSource, hashingService = hashingService, app = application)
+
         signOutRoute()
+
         authenticate()
+
         getSecreteInfo()
+
+
+//Questions Routes
         getSportsQuestions(questionsDataSource = questionsDataSource)
-        getEntertainmentQuestions(questionsDataSource = questionsDataSource)
+
         getSportPrice(questionsDataSource = questionsDataSource)
+
+        getEntertainmentQuestions(questionsDataSource = questionsDataSource)
+
         getEntertainmentPrice(questionsDataSource = questionsDataSource)
+
+        getAcademicQuestions(questionsDataSource = questionsDataSource)
+
+        getAcademicPrice(questionsDataSource = questionsDataSource)
+
+
+
         deleteUserRoute(application,userDataSource)
+
         getUserInfoRoute(app = application, userDataSource = userDataSource)
+
         tokenVerificationRoute(application,userDataSource)
+
         updateUserRoute(application, userDataSource = userDataSource)
+
         authorizedRoute()
+
         unauthorizedRoute()
 
 
