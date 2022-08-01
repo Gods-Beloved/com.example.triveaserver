@@ -2,7 +2,6 @@ package com.example.route.questions
 
 import com.example.domain.model.EndPoints
 import com.example.domain.model.questions.FeeSizeResponse
-import com.example.domain.model.questions.QuestionResponse
 import com.example.domain.repository.QuestionsDataSource
 import io.ktor.http.*
 import io.ktor.server.application.*
@@ -18,14 +17,15 @@ fun Route.getAcademicPrice(
 
     val enterQuestions = questionsDataSource.getAcademicPrice()
 
-            val fee = enterQuestions?.entryfee!!
-            val size = enterQuestions.size!!
+            val fee = enterQuestions?.entryFee!!
+            val size = enterQuestions.size
 
 
             call.respond(HttpStatusCode.OK, message =
             FeeSizeResponse(
-                entryfee = fee,
-                size = size
+                entryFee = fee,
+                size = size,
+                success = true
             )
             )
 

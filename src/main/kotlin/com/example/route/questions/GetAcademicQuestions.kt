@@ -15,25 +15,21 @@ fun Route.getAcademicQuestions(
         get(EndPoints.GetAcademicQuestions.path) {
 
 
-    val enterQuestions = questionsDataSource.getAcademicQuestion()
+            val enterQuestions = questionsDataSource.getAcademicQuestion()
 
+            val updated = questionsDataSource.updateAcademicQuestion(enterQuestions?.question.toString())
 
-
-            if (enterQuestions == null){
-                call.respond(HttpStatusCode.OK, message =
-                QuestionResponse(
+            if (updated){
+                call.respond(HttpStatusCode.OK, message = QuestionResponse(
+                    success = true,
+                    academic = enterQuestions
+                )
+                )
+            }else{
+                call.respond(HttpStatusCode.OK, message = QuestionResponse(
                     success = false
-                )
-                )
+                ))
             }
-
-    call.respond(HttpStatusCode.OK, message =
-    QuestionResponse(
-        success = true,
-        academic = enterQuestions
-    )
-    )
-
 
 
 

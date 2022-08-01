@@ -2,6 +2,7 @@ package com.example.domain.model.questions
 
 @kotlinx.serialization.Serializable
 data class FeeSizeResponse(
-    val entryfee:Int,
-    val size:Int
+    val success:Boolean,
+    val entryFee:Int? = null,
+    val size:Int?=null,
 )

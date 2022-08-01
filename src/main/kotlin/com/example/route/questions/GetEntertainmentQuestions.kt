@@ -15,28 +15,21 @@ fun Route.getEntertainmentQuestions(
         get(EndPoints.GetEntertainmentQuestions.path) {
 
 
-    val enterQuestions = questionsDataSource.getEntertainmentQuestion()
+            val enterQuestions = questionsDataSource.getEntertainmentQuestion()
 
+            val updated = questionsDataSource.updateEntertainmentQuestion(enterQuestions?.question.toString())
 
-
-            if (enterQuestions == null){
-                call.respond(HttpStatusCode.OK, message =
-                QuestionResponse(
+            if (updated){
+                call.respond(HttpStatusCode.OK, message = QuestionResponse(
+                    success = true,
+                    entertainment = enterQuestions
+                )
+                )
+            }else{
+                call.respond(HttpStatusCode.OK, message = QuestionResponse(
                     success = false
-                )
-                )
+                ))
             }
-
-    call.respond(HttpStatusCode.OK, message =
-    QuestionResponse(
-        success = true,
-        entertainment = enterQuestions
-    )
-    )
-
-
-
-
 
         }
 

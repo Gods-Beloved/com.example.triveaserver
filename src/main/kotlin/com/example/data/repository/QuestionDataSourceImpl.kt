@@ -16,9 +16,8 @@ class QuestionDataSourceImpl(
     override suspend fun getSportQuestion(): Sports? {
         val availableQuestion = mutableListOf<Sports?>()
 
-        questions.findOne()?.sports?.forEach {
-            item ->
-            if (!item.received){
+        questions.findOne()?.sports?.forEach { item ->
+            if (!item.received) {
                 availableQuestion.add(
                     Sports(
                         question = item.question,
@@ -29,32 +28,27 @@ class QuestionDataSourceImpl(
             }
         }
 
-        val currentQuestion =  availableQuestion.randomOrNull()
 
-        val updateSuccess =  questions.updateOne(
-            (Question::sports / Sports::question) eq currentQuestion?.question.toString(),
+        return availableQuestion.randomOrNull()
+
+
+        // return questions.findOne()?.live?.get(0)?.sports?.toList()
+    }
+
+    override suspend fun updateSportQuestion(question: String):Boolean {
+
+       return questions.updateOne(
+            (Question::sports / Sports::question) eq question,
             setValue(Question::sports.posOp / Sports::received, true)
         ).wasAcknowledged()
 
-        return if (updateSuccess){
-            currentQuestion
-        } else{
-            null
-        }
-
-
-
-
-
-       // return questions.findOne()?.live?.get(0)?.sports?.toList()
     }
 
     override suspend fun getEntertainmentQuestion(): Entertainment? {
         val availableQuestion = mutableListOf<Entertainment?>()
 
-        questions.findOne()?.entertainment?.forEach {
-                item ->
-            if (!item.received){
+        questions.findOne()?.entertainment?.forEach { item ->
+            if (!item.received) {
                 availableQuestion.add(
                     Entertainment(
                         question = item.question,
@@ -65,29 +59,30 @@ class QuestionDataSourceImpl(
             }
         }
 
-        val currentQuestion =  availableQuestion.randomOrNull()
 
-      val updateSuccess =  questions.updateOne(
-            (Question::entertainment / Entertainment::question) eq currentQuestion?.question.toString(),
+        return availableQuestion.randomOrNull()
+
+
+
+
+
+
+    }
+
+    override suspend fun updateEntertainmentQuestion(question: String): Boolean {
+
+        return questions.updateOne(
+            (Question::entertainment / Entertainment::question) eq question,
             setValue(Question::entertainment.posOp / Entertainment::received, true)
         ).wasAcknowledged()
-
-        return if (updateSuccess){
-            currentQuestion
-        } else{
-            null
-        }
-
-
 
     }
 
     override suspend fun getAcademicQuestion(): Academic? {
         val availableQuestion = mutableListOf<Academic?>()
 
-        questions.findOne()?.academic?.forEach {
-                item ->
-            if (!item.received){
+        questions.findOne()?.academic?.forEach { item ->
+            if (!item.received) {
                 availableQuestion.add(
                     Academic(
                         question = item.question,
@@ -98,19 +93,18 @@ class QuestionDataSourceImpl(
             }
         }
 
-        val currentQuestion =  availableQuestion.randomOrNull()
 
-        val updateSuccess =  questions.updateOne(
-            (Question::academic / Academic::question) eq currentQuestion?.question.toString(),
+        return availableQuestion.randomOrNull()
+
+
+
+    }
+
+    override suspend fun updateAcademicQuestion(question: String): Boolean {
+        return  questions.updateOne(
+            (Question::academic / Academic::question) eq question,
             setValue(Question::academic.posOp / Academic::received, true)
         ).wasAcknowledged()
-
-        return if (updateSuccess){
-            currentQuestion
-        } else{
-            null
-        }
-
 
     }
 
@@ -135,10 +129,22 @@ class QuestionDataSourceImpl(
 
         val size = availableQuestion.size
 
-        return FeeSizeResponse(
-            size = size,
-            entryfee = fee!!
-        )
+        return if (availableQuestion.size < 1){
+            FeeSizeResponse(
+                size = size,
+                entryFee = fee!!,
+                success = true
+            )
+        }else{
+            FeeSizeResponse(
+                size = size,
+                entryFee = fee!!,
+                success = false
+
+            )
+        }
+
+
 
 
 
@@ -166,12 +172,20 @@ class QuestionDataSourceImpl(
 
         val size = availableQuestion.size
 
-        return FeeSizeResponse(
-            size = size,
-            entryfee = fee!!
-        )
+        return if (availableQuestion.size < 1){
+            FeeSizeResponse(
+                size = size,
+                entryFee = fee!!,
+                success = true
+            )
+        }else{
+            FeeSizeResponse(
+                size = size,
+                entryFee = fee!!,
+                success = false
 
-
+            )
+        }
 
 
     }
@@ -196,11 +210,20 @@ class QuestionDataSourceImpl(
 
         val size = availableQuestion.size
 
-        return FeeSizeResponse(
-            size = size,
-            entryfee = fee!!
-        )
+        return if (availableQuestion.size < 1){
+            FeeSizeResponse(
+                size = size,
+                entryFee = fee!!,
+                success = true
+            )
+        }else{
+            FeeSizeResponse(
+                size = size,
+                entryFee = fee!!,
+                success = false
 
+            )
+        }
 
 
     }

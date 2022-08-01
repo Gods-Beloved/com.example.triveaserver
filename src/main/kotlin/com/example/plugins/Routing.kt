@@ -38,7 +38,6 @@ fun Application.configureRouting(
 
         getSecreteInfo()
 
-
 //Questions Routes
         getSportsQuestions(questionsDataSource = questionsDataSource)
 
@@ -51,8 +50,6 @@ fun Application.configureRouting(
         getAcademicQuestions(questionsDataSource = questionsDataSource)
 
         getAcademicPrice(questionsDataSource = questionsDataSource)
-
-
 
         deleteUserRoute(application,userDataSource)
 

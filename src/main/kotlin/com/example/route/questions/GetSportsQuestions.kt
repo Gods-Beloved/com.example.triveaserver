@@ -2,6 +2,7 @@ package com.example.route.questions
 
 import com.example.domain.model.EndPoints
 import com.example.domain.model.questions.QuestionResponse
+import com.example.domain.model.questions.Sports
 import com.example.domain.repository.QuestionsDataSource
 import io.ktor.http.*
 import io.ktor.server.application.*
@@ -12,32 +13,34 @@ fun Route.getSportsQuestions(
     questionsDataSource: QuestionsDataSource
 ){
 
-        get(EndPoints.GetSportsQuestions.path) {
+    get(EndPoints.GetSportsQuestions.path) {
 
 
-    val questions = questionsDataSource.getSportQuestion()
+        val enterQuestions = questionsDataSource.getSportQuestion()
 
-            if (questions == null){
-                call.respond(HttpStatusCode.OK, message =
-                QuestionResponse(
-                    success = false
+        val updated = questionsDataSource.updateSportQuestion(enterQuestions?.question.toString())
 
-                )
-                )
-            }
-
-    call.respond(HttpStatusCode.OK, message =
-    QuestionResponse(
-        success = true,
-        sports =  questions
-    )
-    )
-
-
-
-
-
+        if (updated){
+            call.respond(HttpStatusCode.OK, message = QuestionResponse(
+             success = true,
+                sports = enterQuestions
+            )
+            )
+        }else{
+            call.respond(HttpStatusCode.OK, message = QuestionResponse(
+                success = false
+            ))
         }
+
+
+
+
+
+
+
+
+
+    }
 
 
 }
