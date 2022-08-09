@@ -1,9 +1,15 @@
 package com.example.plugins
 
+import com.example.route.transactions.getTransactions
 import com.example.domain.repository.QuestionsDataSource
 import com.example.domain.repository.UserDataSource
 import com.example.route.*
+import com.example.route.payments.chargeCustomer
+import com.example.route.payments.finishTransferToCustomer
+import com.example.route.payments.transferToCustomer
 import com.example.route.questions.*
+import com.example.route.transactions.createRecipients
+import com.example.route.transactions.verifyPayment
 import com.example.routes.deleteUserRoute
 import com.example.routes.signOutRoute
 import com.example.security.hashing.HashingService
@@ -50,6 +56,18 @@ fun Application.configureRouting(
         getAcademicQuestions(questionsDataSource = questionsDataSource)
 
         getAcademicPrice(questionsDataSource = questionsDataSource)
+
+        getTransactions()
+
+        createRecipients()
+
+        transferToCustomer()
+
+        finishTransferToCustomer()
+
+        chargeCustomer()
+
+        verifyPayment()
 
         deleteUserRoute(application,userDataSource)
 
